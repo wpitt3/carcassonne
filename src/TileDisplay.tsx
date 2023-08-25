@@ -29,7 +29,7 @@ interface Params {
     tile: Tile
 }
 
-const image = (imageName: string, rotation? : number): JSX.Element => {
+const image = (imageName: string, rotation? : number): React.JSX.Element => {
     if ( !rotation ) {
         return <img src={imageName}/>
     } else {
@@ -37,12 +37,19 @@ const image = (imageName: string, rotation? : number): JSX.Element => {
     }
 }
 
-const multiImage = (...images: JSX.Element[]): JSX.Element => {
-    return <div>{images.map((element) => <div>{element}</div>)}</div>
+const multiImage = (...images: React.JSX.Element[]): React.JSX.Element => {
+    return <div>{images.map((element, i) => <div key={i}>{element}</div>)}</div>
 }
 
-const roads = (r: number[]) => {
-    const toPrint: JSX.Element[] = [];
+const roads = (r: number[], c: number[]) => {
+    if (isEqual(r, [0, 0, 1, 0]) && isEqual(c,[1, 0, 0, 0])) {
+        return multiImage(image(a_road), image(a_road, 2));
+    }
+    if (isEqual(r, [0, 1, 0, 2]) && isEqual(c,[1, 0, 2, 0])) {
+        return multiImage(image(a_road), image(a_road, 1), image(a_road, 2), image(a_road, 3), image(village));
+    }
+
+    const toPrint: React.JSX.Element[] = [];
     if (r.filter(num => num === 1).length == 2 && (r[0] === r[1] || r[1] === r[2])) {
         for (let i = 0; i < 4; i++) {
             if (!!r[i] && r[i] === r[(i+1)%4]) {
@@ -62,9 +69,17 @@ const roads = (r: number[]) => {
     return multiImage(...toPrint);
 }
 
-const cities = (c: number[]) => {
+const cities = (c: number[], f: number[]) => {
+    if (isEqual(c,[1, 0, 2, 1])) {
+        return multiImage(image(half_city), image(a_city, 2));
+    }
+
+    if (isEqual(c,[0, 0, 0, 1]) && f[1] !== f[2]) {
+        return multiImage(image(half_city), image(a_grass));
+    }
+
     if (c.filter(num => num === 1).length < 2) {
-        const toPrint: JSX.Element[] = [];
+        const toPrint: React.JSX.Element[] = [];
         for (let i = 0; i < 4; i++) {
             if (!!c[i]) {
                 toPrint.push(image(a_city, i));
@@ -83,7 +98,7 @@ const cities = (c: number[]) => {
         return image(b_city);
     }
     if (isEqual(c, [1, 1, 0, 1])) {
-        return multiImage(image(three_city, 2));
+        return image(three_city, 2);
     }
 }
 
@@ -123,15 +138,13 @@ const inn = (hasCities: boolean) => {
     return hasCities ? image(bottom_right_inn) : image(on_top_inn);
 }
 
-
 function TileDisplay( {tile}: Params ) {
     return (
         <div className="tile-block">
             { !tile.river || <div className="image-holder">{river(tile.river, !!tile.monastery )}</div>}
-            { !tile.roads || <div className="image-holder">{roads(tile.roads)}</div>}
-            { !tile.cities || <div className="image-holder">{cities(tile.cities)}</div>}
+            { !tile.roads || <div className="image-holder">{roads(tile.roads, tile.cities || [])}</div>}
+            { !tile.cities || <div className="image-holder">{cities(tile.cities, tile.fields || [])}</div>}
             { !tile.shield || !tile.cities || <div className="image-holder">{shield(tile.cities)}</div>}
-
             { !tile.inn || <div className="image-holder">{inn(!!tile.cities)}</div>}
             { !tile.garden || <div className="image-holder">{garden(tile.roads || [], tile.cities || [])}</div>}
             { !tile.monastery || <div className="image-holder">{image(monastery)}</div>}
