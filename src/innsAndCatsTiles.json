@@ -1,0 +1,89 @@
+[
+  {
+    "fields": [1,1,1,1,1,2,2,1],
+    "inn": [false, false, true, true],
+    "roads": [0, 0, 1, 1]
+  },
+  {
+    "fields": [1,2,2,2,2,1,1,1],
+    "garden": true,
+    "inn": [false, true, false, true],
+    "roads": [0, 1, 0, 1]
+  },
+  {
+    "fields": [1,1,1,2,2,3,3,1],
+    "inn": [false, true, false, true],
+    "roads": [0, 1, 2, 3]
+  },
+  {
+    "fields": [1,2,2,2,2,1,1,1],
+    "monastery": true,
+    "roads": [0, 1, 0, 2]
+  },
+  {
+    "fields": [],
+    "roads": [1, 2, 2, 1]
+  },
+  {
+    "cities": [1, 0, 0, 1],
+    "fields": [],
+    "roads": [0, 1, 0, 0]
+  },
+  {
+    "cities": [0, 0, 0, 1],
+    "fields": []
+  },
+  {
+    "cities": [1, 2, 3, 4],
+    "fields": [],
+    "garden": true
+  },
+  {
+    "cities": [1, 0, 2, 0],
+    "fields": [],
+    "roads": [0, 1, 0, 2]
+  },
+  {
+    "cities": [1, 0, 0, 0],
+    "fields": [],
+    "roads": [0, 0, 1, 0]
+  },
+  {
+    "cathedral": true,
+    "cities": [1, 1, 1, 1]
+  },
+  {
+    "cities": [1, 0, 0, 1],
+    "fields": [0,0,1,2,2,1,0,0],
+    "inn": [false, true, true, false],
+    "roads": [0, 1, 1, 0],
+    "shield": true
+  },
+  {
+    "cities": [1, 0, 0, 0],
+    "fields": [],
+    "inn": [false, false, true, true],
+    "roads": [0, 0, 1, 1]
+  },
+  {
+    "cities": [1, 0, 0, 1],
+    "fields": [],
+    "inn": [false, false, true, false],
+    "roads": [0, 0, 1, 0]
+  },
+  {
+    "cities": [1, 2, 0, 3],
+    "fields": []
+  },
+  {
+    "cities": [1, 0, 2, 1],
+    "fields": [],
+    "shield": true
+  },
+  {
+    "cities": [0, 1, 0, 1],
+    "fields": [],
+    "shield": true,
+    "roads": [1, 0, 2, 0]
+  }
+]

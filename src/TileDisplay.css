@@ -1,0 +1,39 @@
+
+.tile-block {
+    display: block;
+    float: left;
+    width: 100px;
+    height: 100px;
+    background-color: #9ABB18;
+    margin: 1px;
+}
+
+.rot90 {
+    transform: rotate(90deg);
+}
+
+.rot180 {
+    transform: rotate(180deg);
+}
+
+.rot270 {
+    transform: rotate(270deg);
+}
+
+.image-holder {
+    width: 0px;
+    height: 0px;
+}
+
+.image-holder div {
+    width: 0px;
+    height: 0px;
+}
+
+.image-holder div img {
+    position: relative;
+}
+
+.image-holder img {
+    position: relative;
+}

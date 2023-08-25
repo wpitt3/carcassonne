@@ -1,0 +1,51 @@
+[
+  {
+    "fields": [1,1,1,1,1,1,1,1],
+    "river": [false, false, true, false]
+  },
+  {
+    "cities": [1, 0, 0, 0],
+    "fields": [0,0,1,2,2,3,3,1],
+    "river": [false, true, false, true],
+    "roads": [0,0,1,0]
+  },
+  {
+    "cities": [1, 0, 2, 0],
+    "fields": [0,0,1,2,0,0,2,1],
+    "river": [false, true, false, true]
+  },
+  {
+    "fields": [1,1,1,2,2,2,2,1],
+    "river": [false, true, false, true]
+  },
+  {
+    "cities": [1, 0, 0, 1],
+    "fields": [0,0,1,2,2,1,0,0],
+    "river": [false, true, true, false]
+  },
+  {
+    "fields": [1,1,2,2,1,1,1,1],
+    "river": [false, true, true, false]
+  },
+  {
+    "fields": [1,2,2,1,1,1,1,1],
+    "river": [true, true, false, false],
+    "garden": true
+  },
+  {
+    "fields": [1,1,1,2,2,3,3,1],
+    "monastery": true,
+    "roads": [0, 0, 1, 0],
+    "river": [false, true, false, true]
+  },
+  {
+    "fields": [1,2,2,1,1,3,3,1],
+    "roads": [0, 0, 1, 1],
+    "river": [true, true, false, false]
+  },
+  {
+    "fields": [1,2,2,3,3,4,4,1],
+    "river": [false, true, false, true],
+    "roads": [1, 0, 1, 0]
+  }
+]
