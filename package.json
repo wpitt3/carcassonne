@@ -2,7 +2,7 @@
   "name": "carcassonnne",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://wpitt3.github.io/carcassonnne",
+  "homepage": "https://wpitt3.github.io/carcassonne",
   "dependencies": {
     "@types/node": "^16.18.46",
     "@types/react": "^18.2.14",

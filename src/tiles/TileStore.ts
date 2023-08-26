@@ -22,18 +22,6 @@ export interface Tile {
 // cities represents city index
 // shield represents the index of the city with the shield
 
-
-// {
-//     "cities": [],
-//     "fields": [],
-//     "garden": true,
-//     "inn": [],
-//     "monastery": true,
-//     "river": [],
-//     "roads": [],
-//     "shield": 1
-//   }
-
 export class TileStore {
 
     baseTiles(): Tile[] {

@@ -3,27 +3,27 @@ import isEqual from 'lodash/isEqual';
 
 import './TileDisplay.css';
 import { Tile } from './TileStore';
-import monastery from './icons/monastery.png';
-import a_road from './icons/1-road.png';
-import c_road from './icons/c-road.png';
-import village from './icons/village.png';
-import a_city from './icons/1-city.png';
-import all_city from './icons/all-city.png';
-import half_city from './icons/half-city.png';
-import three_city from './icons/3-city.png';
-import b_city from './icons/b-city.png';
-import a_grass from './icons/1-grass.png';
-import top_shield from './icons/top-shield.png';
-import mid_shield from './icons/mid-shield.png';
-import t_garden from './icons/t-garden.png';
-import m_garden from './icons/m-garden.png';
-import b_river from './icons/b-river.png';
-import c_river from './icons/c-river.png';
-import e_river from './icons/e-river.png';
-import s_river from './icons/s-river.png';
-import cathedral from './icons/cat.png';
-import bottom_right_inn from './icons/b-r-inn.png';
-import on_top_inn from './icons/mid-inn.png';
+import monastery from '../assets/monastery.png';
+import a_road from '../assets/1-road.png';
+import c_road from '../assets/c-road.png';
+import village from '../assets/village.png';
+import a_city from '../assets/1-city.png';
+import all_city from '../assets/all-city.png';
+import half_city from '../assets/half-city.png';
+import three_city from '../assets/3-city.png';
+import b_city from '../assets/b-city.png';
+import a_grass from '../assets/1-grass.png';
+import top_shield from '../assets/top-shield.png';
+import mid_shield from '../assets/mid-shield.png';
+import t_garden from '../assets/t-garden.png';
+import m_garden from '../assets/m-garden.png';
+import b_river from '../assets/b-river.png';
+import c_river from '../assets/c-river.png';
+import e_river from '../assets/e-river.png';
+import s_river from '../assets/s-river.png';
+import cathedral from '../assets/cat.png';
+import bottom_right_inn from '../assets/b-r-inn.png';
+import on_top_inn from '../assets/mid-inn.png';
 
 interface Params {
     tile: Tile
