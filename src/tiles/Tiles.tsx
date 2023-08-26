@@ -1,4 +1,3 @@
-import React from 'react';
 import './Tiles.css';
 import TileDisplay from './TileDisplay';
 import {TileStore} from './TileStore';
