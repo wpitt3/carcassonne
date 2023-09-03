@@ -2,7 +2,7 @@ import React from 'react';
 import isEqual from 'lodash/isEqual';
 
 import './TileDisplay.css';
-import { Tile } from './TileStore';
+import { Tile } from './Tile';
 import cathedral from '../assets/cathedral.png';
 import city_full from '../assets/city_full.png';
 import city_half from '../assets/city_half.png';
