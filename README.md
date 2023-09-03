@@ -12,7 +12,7 @@ The idea for this repo is to store the representation for each of the tiles and 
 Each tile is made up of 9 different possible icons.
 I have represented each item on the tile by an array of a set length 4 (8 for fields) starting on the north side (north north west edge for field) and working around clockwise.
 
-[Schema](src/tiles/Tile.ts)
+[Schema](web/src/tiles/Tile.ts)
 
 ### Variables
 booleans - based on presence
@@ -53,7 +53,7 @@ numbers - value of affected
 
 
 ### Json files for tiles
-- [Base Game json](src/assets/json/baseTiles.json)
-- [The River json](src/assets/json/riverTiles.json)
-- [Inns and Cathedrals Game json](src/assets/json/innsAndCatsTiles.json)
+- [Base Game json](web/src/assets/json/baseTiles.json)
+- [The River json](web/src/assets/json/riverTiles.json)
+- [Inns and Cathedrals Game json](web/src/assets/json/innsAndCatsTiles.json)
 
