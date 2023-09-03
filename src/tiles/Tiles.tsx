@@ -3,9 +3,9 @@ import TileDisplay from './TileDisplay';
 import {TileStore} from './TileStore';
 
 function Tiles() {
-  const baseTiles = new TileStore().baseTiles();
-  const riverTiles = new TileStore().riverTiles();
-  const innsAndCatsTiles = new TileStore().innsAndCatsTiles();
+  const baseTiles = new TileStore().getBaseTiles();
+  const riverTiles = new TileStore().getRiverTiles();
+  const innsAndCatsTiles = new TileStore().getInnsAndCatsTiles();
   return (
     <div>
         <div className="tile-block-wrapper">

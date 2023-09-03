@@ -1,0 +1,281 @@
+[
+  {
+    "id": 11,
+    "count": 2,
+    "props": {
+      "fields": [1, 1, 1, 1, 1, 1, 1, 1],
+      "monastery": true,
+      "roads": [0, 0, 1, 0]
+    }
+  },
+  {
+    "id": 12,
+    "count": 4,
+    "props": {
+      "fields": [1, 1, 1, 1, 1, 1, 1, 1],
+      "monastery": true
+    }
+  },
+  {
+    "id": 13,
+    "count": 1,
+    "props": {
+      "cities": [1, 1, 1, 1],
+      "shield": 1
+    }
+  },
+  {
+    "id": 14,
+    "count": 4,
+    "props": {
+      "cities": [1, 0, 0, 0],
+      "fields": [0, 0, 1, 2, 2, 2, 2, 1],
+      "roads": [0, 1, 0, 1]
+    }
+  },
+  {
+    "id": 15,
+    "count": 4,
+    "props": {
+      "cities": [1, 0, 0, 0],
+      "fields": [0, 0, 1, 1, 1, 1, 1, 1]
+    }
+  },
+  {
+    "id": 16,
+    "count": 1,
+    "props": {
+      "cities": [1, 0, 0, 0],
+      "fields": [0, 0, 1, 1, 1, 1, 1, 1],
+      "garden": true
+    }
+  },
+  {
+    "id": 17,
+    "count": 2,
+    "props": {
+      "cities": [0, 1, 0, 1],
+      "fields": [1, 1, 0, 0, 2, 2, 0, 0],
+      "shield": 1
+    }
+  },
+  {
+    "id": 18,
+    "count": 1,
+    "props": {
+      "cities": [0, 1, 0, 1],
+      "fields": [1, 1, 0, 0, 2, 2, 0, 0]
+    }
+  },
+  {
+    "id": 19,
+    "count": 2,
+    "props": {
+      "cities": [1, 0, 2, 0],
+      "fields": [0, 0, 1, 1, 0, 0, 1, 1]
+    }
+  },
+  {
+    "id": 20,
+    "count": 1,
+    "props": {
+      "cities": [1, 0, 2, 0],
+      "fields": [0, 0, 1, 1, 0, 0, 1, 1],
+      "garden": true
+    }
+  },
+  {
+    "id": 21,
+    "count": 1,
+    "props": {
+      "cities": [1, 0, 0, 2],
+      "fields": [0, 0, 1, 1, 1, 1, 0, 0]
+    }
+  },
+  {
+    "id": 22,
+    "count": 1,
+    "props": {
+      "cities": [1, 0, 0, 2],
+      "fields": [0, 0, 1, 1, 1, 1, 0, 0],
+      "garden": true
+    }
+  },
+  {
+    "id": 23,
+    "count": 3,
+    "props": {
+      "cities": [1, 0, 0, 0],
+      "fields": [0, 0, 1, 2, 2, 1, 1, 1],
+      "roads": [0, 1, 1, 0]
+    }
+  },
+  {
+    "id": 24,
+    "count": 3,
+    "props": {
+      "cities": [1, 0, 0, 0],
+      "fields": [0, 0, 1, 1, 1, 2, 2, 1],
+      "roads": [0, 0, 1, 1]
+    }
+  },
+  {
+    "id": 25,
+    "count": 3,
+    "props": {
+      "cities": [1, 0, 0, 0],
+      "fields": [0, 0, 1, 2, 2, 3, 3, 1],
+      "roads": [0, 1, 2, 3]
+    }
+  },
+  {
+    "id": 26,
+    "count": 1,
+    "props": {
+      "cities": [1, 0, 0, 1],
+      "fields": [0, 0, 1, 1, 1, 1, 0, 0],
+      "shield": 1
+    }
+  },
+  {
+    "id": 27,
+    "count": 1,
+    "props": {
+      "cities": [1, 0, 0, 1],
+      "fields": [0, 0, 1, 1, 1, 1, 0, 0],
+      "shield": 1,
+      "garden": true
+    }
+  },
+  {
+    "id": 28,
+    "count": 2,
+    "props": {
+      "cities": [1, 0, 0, 1],
+      "fields": [0, 0, 1, 1, 1, 1, 0, 0]
+    }
+  },
+  {
+    "id": 29,
+    "count": 1,
+    "props": {
+      "cities": [1, 0, 0, 1],
+      "fields": [0, 0, 1, 1, 1, 1, 0, 0],
+      "garden": true
+    }
+  },
+  {
+    "id": 30,
+    "count": 2,
+    "props": {
+      "cities": [1, 0, 0, 1],
+      "fields": [0, 0, 1, 2, 2, 1, 0, 0],
+      "shield": 1,
+      "roads": [0, 1, 1, 0]
+    }
+  },
+  {
+    "id": 31,
+    "count": 3,
+    "props": {
+      "cities": [1, 0, 0, 1],
+      "fields": [0, 0, 1, 2, 2, 1, 0, 0],
+      "roads": [0, 1, 1, 0]
+    }
+  },
+  {
+    "id": 32,
+    "count": 1,
+    "props": {
+      "cities": [1, 1, 0, 1],
+      "fields": [0, 0, 0, 0, 1, 1, 0, 0],
+      "shield": 1
+    }
+  },
+  {
+    "id": 33,
+    "count": 2,
+    "props": {
+      "cities": [1, 1, 0, 1],
+      "fields": [0, 0, 0, 0, 1, 1, 0, 0]
+    }
+  },
+  {
+    "id": 34,
+    "count": 1,
+    "props": {
+      "cities": [1, 1, 0, 1],
+      "fields": [0, 0, 0, 0, 1, 1, 0, 0],
+      "garden": true
+    }
+  },
+  {
+    "id": 35,
+    "count": 2,
+    "props": {
+      "cities": [1, 1, 0, 1],
+      "fields": [0, 0, 0, 0, 1, 2, 0, 0],
+      "shield": 1,
+      "roads": [0, 0, 1, 0]
+    }
+  },
+  {
+    "id": 36,
+    "count": 1,
+    "props": {
+      "cities": [1, 1, 0, 1],
+      "fields": [0, 0, 0, 0, 1, 2, 0, 0],
+      "roads": [0, 0, 1, 0]
+    }
+  },
+  {
+    "id": 37,
+    "count": 7,
+    "props": {
+      "fields": [1, 2, 2, 2, 2, 1, 1, 1],
+      "roads": [1, 0, 1, 0]
+    }
+  },
+  {
+    "id": 38,
+    "count": 1,
+    "props": {
+      "fields": [1, 2, 2, 2, 2, 1, 1, 1],
+      "roads": [1, 0, 1, 0],
+      "garden": true
+    }
+  },
+  {
+    "id": 39,
+    "count": 8,
+    "props": {
+      "fields": [1, 1, 1, 1, 1, 2, 2, 1],
+      "roads": [0, 0, 1, 1]
+    }
+  },
+  {
+    "id": 40,
+    "count": 1,
+    "props": {
+      "fields": [1, 1, 1, 1, 1, 2, 2, 1],
+      "roads": [0, 0, 1, 1],
+      "garden": true
+    }
+  },
+  {
+    "id": 41,
+    "count": 4,
+    "props": {
+      "fields": [1, 1, 1, 2, 2, 3, 3, 1],
+      "roads": [0, 1, 2, 3]
+    }
+  },
+  {
+    "id": 42,
+    "count": 1,
+    "props": {
+      "fields": [1, 2, 2, 3, 3, 4, 4, 1],
+      "roads": [1, 2, 3, 4]
+    }
+  }
+]

@@ -1,11 +1,5 @@
+Check fields are valid
 
-Carcassonne 2
-
-https://wikicarpedia.com/car/Base_game
-
-https://wikicarpedia.com/car/River
-
-https://wikicarpedia.com/car/Inns_and_Cathedrals
 
 ## Schema
 Characters on board
@@ -16,8 +10,6 @@ Characters on board
 Count of tiles
 
 Schema of current ingame state
-
-Check fields are valid
 
 ## Display 
 - meeple on board

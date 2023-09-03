@@ -1,19 +1,34 @@
-import baseTiles from "./baseTiles.json";
-import riverTiles from "./riverTiles.json";
-import innsAndCatsTiles from "./innsAndCatsTiles.json";
+import baseTiles from "../assets/json/baseTiles.json";
+import riverTiles from "../assets/json/riverTiles.json";
+import innsAndCatsTiles from "../assets/json/innsAndCatsTiles.json";
 import { Tile } from "./Tile";
 
+interface TileWithMeta {
+    id: number,
+    count: number,
+    props: Tile
+}
+
 export class TileStore {
+    private baseTiles: TileWithMeta[];
+    private riverTiles: TileWithMeta[];
+    private innsAndCatsTiles: TileWithMeta[];
 
-    baseTiles(): Tile[] {
-        return baseTiles as Tile[];
+    constructor() {
+        this.baseTiles = baseTiles as TileWithMeta[];
+        this.riverTiles = riverTiles as TileWithMeta[];
+        this.innsAndCatsTiles = innsAndCatsTiles as TileWithMeta[];
     }
 
-    riverTiles(): Tile[] {
-        return riverTiles as Tile[];
+    getBaseTiles(): Tile[] {
+        return this.baseTiles.map((it) => it.props);
     }
 
-    innsAndCatsTiles(): Tile[] {
-        return innsAndCatsTiles as Tile[];
+    getRiverTiles(): Tile[] {
+        return this.riverTiles.map((it) => it.props);
+    }
+
+    getInnsAndCatsTiles(): Tile[] {
+        return this.innsAndCatsTiles.map((it) => it.props);
     }
 }

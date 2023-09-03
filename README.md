@@ -53,7 +53,7 @@ numbers - value of affected
 
 
 ### Json files for tiles
-- [Base Game json](src/tiles/baseTiles.json)
-- [The River json](src/tiles/riverTiles.json)
-- [Inns and Cathedrals Game json](src/tiles/innsAndCatsTiles.json)
+- [Base Game json](src/assets/json/baseTiles.json)
+- [The River json](src/assets/json/riverTiles.json)
+- [Inns and Cathedrals Game json](src/assets/json/innsAndCatsTiles.json)
 

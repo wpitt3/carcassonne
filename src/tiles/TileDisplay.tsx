@@ -3,27 +3,27 @@ import isEqual from 'lodash/isEqual';
 
 import './TileDisplay.css';
 import { Tile } from './Tile';
-import cathedral from '../assets/cathedral.png';
-import city_full from '../assets/city_full.png';
-import city_half from '../assets/city_half.png';
-import city_opposite from '../assets/city_opposite.png';
-import city_side from '../assets/city_side.png';
-import city_three from '../assets/city_three.png';
-import garden_mid from '../assets/garden_mid.png';
-import garden_top from '../assets/garden_top.png';
-import grass_side from '../assets/grass_side.png';
-import inn_bottom_right from '../assets/inn_bottom_right.png';
-import inn_top from '../assets/inn_top.png';
-import monastery from '../assets/monastery.png';
-import river_curved from '../assets/river_curved.png';
-import river_end from '../assets/river_end.png';
-import river_kinked from '../assets/river_kinked.png';
-import river_straight from '../assets/river_straight.png';
-import road_curved from '../assets/road_curved.png';
-import road_half from '../assets/road_half.png';
-import shield_mid from '../assets/shield_mid.png';
-import shield_top from '../assets/shield_top.png';
-import village from '../assets/village.png';
+import cathedral from '../assets/tiles/cathedral.png';
+import city_full from '../assets/tiles/city_full.png';
+import city_half from '../assets/tiles/city_half.png';
+import city_opposite from '../assets/tiles/city_opposite.png';
+import city_side from '../assets/tiles/city_side.png';
+import city_three from '../assets/tiles/city_three.png';
+import garden_mid from '../assets/tiles/garden_mid.png';
+import garden_top from '../assets/tiles/garden_top.png';
+import grass_side from '../assets/tiles/grass_side.png';
+import inn_bottom_right from '../assets/tiles/inn_bottom_right.png';
+import inn_top from '../assets/tiles/inn_top.png';
+import monastery from '../assets/tiles/monastery.png';
+import river_curved from '../assets/tiles/river_curved.png';
+import river_end from '../assets/tiles/river_end.png';
+import river_kinked from '../assets/tiles/river_kinked.png';
+import river_straight from '../assets/tiles/river_straight.png';
+import road_curved from '../assets/tiles/road_curved.png';
+import road_half from '../assets/tiles/road_half.png';
+import shield_mid from '../assets/tiles/shield_mid.png';
+import shield_top from '../assets/tiles/shield_top.png';
+import village from '../assets/tiles/village.png';
 
 interface Params {
     tile: Tile
