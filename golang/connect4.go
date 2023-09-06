@@ -39,11 +39,16 @@ func (board ConnectFour) Winner() int {
 	return find4InBoard(board.board)
 }
 
+func (board ConnectFour) CurrentPlayer() int {
+	return board.player
+}
+
 func (board ConnectFour) PerformMove(action Action) Board[Action] {
 	connectFourAction := action.(ConnectFourAction)
 	for i := 0; i < 6; i++ {
 		if board.board[connectFourAction.index][i] == 0 {
 			board.board[connectFourAction.index][i] = connectFourAction.player
+			board.player = board.player * -1
 			return board
 		}
 	}

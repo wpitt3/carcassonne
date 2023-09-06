@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"math"
 	"math/rand"
 	// 	"fmt"
@@ -15,6 +16,7 @@ type Board[A Action] interface {
 	PerformMove(A) Board[A]
 	IsEndState() bool
 	Winner() int
+	CurrentPlayer() int
 }
 
 type node struct {
@@ -32,7 +34,7 @@ type node struct {
 func rootNode(board Board[Action]) *node {
 	return &node{
 		board:             board.Copy(),
-		action:            -1,
+		action:            nil,
 		unexpandedActions: shuffleActions(board.ValidActions()),
 	}
 }
@@ -58,10 +60,10 @@ func findBestMove(board Board[Action], turns int) Action {
 	for i := 0; i < turns; i++ {
 		leafNode := selectLeafNode(rootNode)
 		result := rolloutGame(leafNode.board)
-		var score float32
+		var score float32 = 0.0
 		if result == 0 {
 			score = 0.5
-		} else if result == -1 {
+		} else if result != board.CurrentPlayer() {
 			score = 1.0
 		}
 		currentNode := leafNode
@@ -75,8 +77,10 @@ func findBestMove(board Board[Action], turns int) Action {
 		currentNode.denom += 1
 	}
 
+	fmt.Println("")
 	//fmt.Println(rootNode.children[0].action)
-	//fmt.Println(rootNode.children[0].numer / rootNode.children[0].denom)
+	//fmt.Println(rootNode.children[0].numer)
+	//fmt.Println(rootNode.children[0].denom)
 
 	bestMove := rootNode.children[0].action
 	bestScore := rootNode.children[0].numer / rootNode.children[0].denom
