@@ -12,14 +12,14 @@ type ConnectFourAction struct {
 	player int
 }
 
-func NewConnectFour(board  [7][6]int, player int) ConnectFour {
-    return ConnectFour{
-        board,
-        player,
-    }
+func NewConnectFour(board [7][6]int, player int) ConnectFour {
+	return ConnectFour{
+		board,
+		player,
+	}
 }
 
-func (board ConnectFour) Copy() Board[Action] {
+func (board ConnectFour) Copy() State[Action] {
 	var newBoard ConnectFour
 	for i := 0; i < 7; i++ {
 		for j := 0; j < 6; j++ {
@@ -52,7 +52,7 @@ func (board ConnectFour) CurrentPlayer() int {
 	return board.player
 }
 
-func (board ConnectFour) PerformMove(action Action) Board[Action] {
+func (board ConnectFour) PerformMove(action Action) State[Action] {
 	connectFourAction := action.(ConnectFourAction)
 	for i := 0; i < 6; i++ {
 		if board.board[connectFourAction.index][i] == 0 {

@@ -6,7 +6,7 @@ import (
 	. "will.com/mcts"
 )
 
-func Test_find4_emptyBoard(t *testing.T) {
+func Test_find4_emptyState(t *testing.T) {
 	var board [7][6]int
 	assert.Equal(t, 0, find4InBoard(board))
 }
@@ -51,17 +51,17 @@ func Test_find4_diagNW(t *testing.T) {
 	assert.Equal(t, 1, find4InBoard(board))
 }
 
-func Test_copyBoard(t *testing.T) {
+func Test_copyState(t *testing.T) {
 	var board ConnectFour
 	board.board[0][0] = 1
 
-	var newBoard = board.Copy()
+	var newState = board.Copy()
 	board.board[0][0] = 0
-	assert.Equal(t, 1, newBoard.(ConnectFour).board[0][0])
+	assert.Equal(t, 1, newState.(ConnectFour).board[0][0])
 	assert.Equal(t, 0, board.board[0][0])
 }
 
-func Test_fullBoard(t *testing.T) {
+func Test_fullState(t *testing.T) {
 	var board [7][6]int
 	assert.Equal(t, false, boardIsFull(board))
 	for i := 0; i < 7; i++ {
@@ -71,7 +71,7 @@ func Test_fullBoard(t *testing.T) {
 }
 
 func Test_performMove(t *testing.T) {
-	var board Board[Action] = ConnectFour{}
+	var board State[Action] = ConnectFour{}
 	board = board.PerformMove(ConnectFourAction{0, 1})
 	board = board.PerformMove(ConnectFourAction{0, 1})
 	assert.Equal(t, 1, board.(ConnectFour).board[0][0])
@@ -79,7 +79,7 @@ func Test_performMove(t *testing.T) {
 }
 
 func Test_ValidActions(t *testing.T) {
-	var board Board[Action] = ConnectFour{}
+	var board State[Action] = ConnectFour{}
 	actions := board.ValidActions()
 	assert.Equal(t, 7, len(actions))
 }

@@ -5,61 +5,22 @@ import (
 	"math/rand"
 )
 
+const C = float32(1.414)
+
 type Action interface {
 }
 
-type Board[A Action] interface {
-	Copy() Board[A]
+type State[A Action] interface {
+	Copy() State[A]
 	ValidActions() []A
-	PerformMove(A) Board[A]
+	PerformMove(A) State[A]
 	IsEndState() bool
 	Winner() int
 	CurrentPlayer() int
 }
 
-type node struct {
-	numer             float32
-	denom             float32
-	board             Board[Action]
-	parent            *node
-	children          []*node
-	isTerminalState   bool
-	action            Action
-	unexpandedActions []Action
-	winner            int
-}
-
-func rootNode(board Board[Action]) *node {
-	return createNode(board)
-}
-
-func newNode(parentNode *node, action Action) *node {
-	board := parentNode.board.PerformMove(action)
-	newNode := createNode(board)
-	newNode.parent = parentNode
-    newNode.action = action
-	parentNode.children = append(parentNode.children, newNode)
-	return newNode
-}
-
-func createNode(board Board[Action]) *node {
-    winner := board.Winner()
-    isTerminalState := winner != 0 || board.IsEndState()
-    var actions []Action
-    if !isTerminalState {
-        actions = shuffleActions(board.ValidActions())
-    }
-    newNode := &node{
-        board:             board,
-        winner:            winner,
-        isTerminalState:   isTerminalState,
-        unexpandedActions: actions,
-    }
-    return newNode
-}
-
-func FindBestMove(board Board[Action], turns int) Action {
-	rootNode := rootNode(board)
+func FindBestMove(board State[Action], turns int) Action {
+	rootNode := createNode(board)
 	for i := 0; i < turns; i++ {
 		leafNode := selectLeafNode(rootNode)
 		result := rolloutGame(leafNode.board)
@@ -92,29 +53,64 @@ func FindBestMove(board Board[Action], turns int) Action {
 	return bestMove
 }
 
+type node struct {
+	numer             float32
+	denom             float32
+	board             State[Action]
+	parent            *node
+	children          []*node
+	isTerminal        bool
+	action            Action
+	unexpandedActions []Action
+	winner            int
+}
+
+func createNode(board State[Action]) *node {
+	winner := board.Winner()
+	isTerminalState := winner != 0 || board.IsEndState()
+	var actions []Action
+	if !isTerminalState {
+		actions = shuffleActions(board.ValidActions())
+	}
+	newNode := &node{
+		board:             board,
+		winner:            winner,
+		isTerminal:        isTerminalState,
+		unexpandedActions: actions,
+	}
+	return newNode
+}
+
+func newNode(parentNode *node, action Action) *node {
+	board := parentNode.board.PerformMove(action)
+	newNode := createNode(board)
+	newNode.parent = parentNode
+	newNode.action = action
+	parentNode.children = append(parentNode.children, newNode)
+	return newNode
+}
+
 func selectLeafNode(rootNode *node) *node {
 	currentNode := rootNode
-	c := float32(2.414)
-	for !currentNode.isTerminalState {
-
+	for !currentNode.isTerminal {
 		if len(currentNode.unexpandedActions) > 0 {
 			newNode := newNode(currentNode, currentNode.unexpandedActions[0])
 			currentNode.unexpandedActions = currentNode.unexpandedActions[1:]
 			return newNode
 		}
-		currentNode = findBestChild(currentNode, c)
+		currentNode = findBestChild(currentNode)
 	}
 
 	return currentNode
 }
 
-func findBestChild(parent *node, c float32) *node {
+func findBestChild(parent *node) *node {
 	logTotalParent := math.Log(float64(parent.denom))
 	var maxScore float32 = 0.0
-	var bestChild *node = parent.children[0]
+	var bestChild = parent.children[0]
 	for i := 0; i < len(parent.children); i++ {
 		child := parent.children[i]
-		score := exploreFunction(child.numer, child.denom, logTotalParent, c)
+		score := exploreFunction(child.numer, child.denom, logTotalParent)
 		if score > maxScore {
 			maxScore = score
 			bestChild = child
@@ -123,8 +119,8 @@ func findBestChild(parent *node, c float32) *node {
 	return bestChild
 }
 
-func exploreFunction(wins float32, total float32, logTotalParent float64, c float32) float32 {
-	return wins/total + c*float32(math.Sqrt(logTotalParent/float64(total)))
+func exploreFunction(wins float32, total float32, logTotalParent float64) float32 {
+	return wins/total + C*float32(math.Sqrt(logTotalParent/float64(total)))
 }
 
 func shuffleActions(list []Action) []Action {
@@ -138,7 +134,7 @@ func shuffleActions(list []Action) []Action {
 	return list
 }
 
-func rolloutGame(originalBoard Board[Action]) int {
+func rolloutGame(originalBoard State[Action]) int {
 	rand := rand.New(rand.NewSource(1))
 	board := originalBoard.Copy()
 	result := board.Winner()
@@ -150,29 +146,5 @@ func rolloutGame(originalBoard Board[Action]) int {
 		result = board.Winner()
 		done = result != 0 || board.IsEndState()
 	}
-
 	return result
 }
-//
-// func printTree(aNode *node, depth int, maxDepth int, minSize int) {
-//     sortChildren(aNode.children)
-//     if depth < maxDepth {
-//         for i := 0; i < len(aNode.children); i++ {
-//             child := aNode.children[i]
-//             terminal := ""
-//             if child.isTerminalState {
-//                 terminal = " T"
-//             }
-//             fmt.Println(strings.Repeat("- ", depth) + fmt.Sprintf("%.3f",child.numer/child.denom) + " " + fmt.Sprint(child.action) + " " + fmt.Sprintf("%.0f", child.denom) + terminal)
-//             if child.denom > float32(minSize) {
-//                 printTree(child, depth+1, maxDepth, minSize)
-//             }
-//         }
-//     }
-// }
-//
-// func sortChildren(children []*node){
-//     sort.Slice(children, func(i, j int) bool {
-//         return children[i].action.(ConnectFourAction).index < children[j].action.(ConnectFourAction).index
-//     })
-// }

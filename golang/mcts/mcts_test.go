@@ -5,162 +5,78 @@ import (
 	"testing"
 )
 
-
-type TicTacToe struct {
-	board  [3][3]int
-	player int
-}
-
-type TicTacToeAction struct {
-	x  int
-	y  int
-	player int
-}
-
-func (board TicTacToe) Copy() Board[Action] {
-	var newBoard TicTacToe
-	for i := 0; i < 3; i++ {
-		for j := 0; j < 3; j++ {
-			newBoard.board[i][j] = board.board[i][j]
-		}
-	}
-	newBoard.player = board.player
-	return newBoard
-}
-
-func (board TicTacToe) ValidActions() []Action {
-	validMoves := make([]Action, 0)
-	for i := 0; i < 3; i++ {
-        for j := 0; j < 3; j++ {
-            if board.board[i][j] == 0 {
-			    validMoves = append(validMoves, TicTacToeAction{i, j, board.player})
-			}
-		}
-	}
-	return validMoves
-}
-
-func (board TicTacToe) IsEndState() bool {
-    for i := 0; i < 3; i++ {
-		for j := 0; j < 3; j++ {
-            if board.board[i][j] == 0 {
-                return false;
-            }
-		}
-    }
-	return true;
-}
-
-func (board TicTacToe) Winner() int {
-	for i := 0; i < 3; i++ {
-	    var sum = 0
-        for j := 0; j < 3; j++ {
-            sum += board.board[i][j]
-        }
-        if abs(sum) == 3 {
-            return sum / 3
-        }
-    }
-    for i := 0; i < 3; i++ {
-        var sum = 0
-        for j := 0; j < 3; j++ {
-            sum += board.board[j][i]
-        }
-        if abs(sum) == 3 {
-            return sum / 3
-        }
-    }
-    var sum = board.board[0][0] + board.board[1][1] + board.board[2][2]
-    if abs(sum) == 3 {
-        return sum / 3
-    }
-    sum = board.board[2][0] + board.board[1][1] + board.board[0][2]
-    if abs(sum) == 3 {
-        return sum / 3
-    }
-    return 0
-}
-
-func abs(x int) int {
-	if x < 0 {
-		return -x
-	}
-	return x
-}
-
-func (board TicTacToe) CurrentPlayer() int {
-	return board.player
-}
-
-func (board TicTacToe) PerformMove(action Action) Board[Action] {
-	ticTacToeAction := action.(TicTacToeAction)
-	board.board[ticTacToeAction.x][ticTacToeAction.y] = ticTacToeAction.player
-    board.player = board.player * -1
-	return board
-}
-
 func Test_rootnode(t *testing.T) {
-	var board Board[Action] = TicTacToe{[3][3]int{}, 1}
-	board = board.PerformMove(TicTacToeAction{0, 0, 1}).(TicTacToe)
-	rootNode := rootNode(board)
+	var board State[Action] = TicTacToe{[3][3]int{}, 1}
+	rootNode := createNode(board)
 
 	assert.Equal(t, nil, rootNode.action)
-	assert.Equal(t, 1, rootNode.board.(TicTacToe).board[0][0])
-	assert.Equal(t, -1, rootNode.board.(TicTacToe).player)
-	assert.Equal(t, 8, len(rootNode.unexpandedActions))
+	assert.Equal(t, 1, rootNode.board.(TicTacToe).player)
+	assert.Equal(t, 9, len(rootNode.unexpandedActions))
+	assert.Equal(t, false, rootNode.isTerminal)
+	assert.Equal(t, 0, rootNode.winner)
 }
 
 func Test_newNode(t *testing.T) {
-	var board Board[Action] = TicTacToe{[3][3]int{}, 1}
-	rootNode := rootNode(board)
+	var board State[Action] = TicTacToe{[3][3]int{}, 1}
+	rootNode := createNode(board)
 	newNode := newNode(rootNode, TicTacToeAction{0, 0, 1})
 
 	assert.Equal(t, TicTacToeAction{0, 0, 1}, newNode.action)
-	assert.Equal(t, 1, newNode.board.(TicTacToe).board[0][0])
 	assert.Equal(t, -1, newNode.board.(TicTacToe).player)
-	assert.Equal(t, rootNode, newNode.parent)
-	assert.Equal(t, 0, newNode.winner)
-	assert.Equal(t, false, newNode.isTerminalState)
-	assert.Equal(t, 9, len(rootNode.unexpandedActions))
 	assert.Equal(t, 8, len(newNode.unexpandedActions))
+	assert.Equal(t, false, newNode.isTerminal)
+	assert.Equal(t, 0, newNode.winner)
+	assert.Equal(t, 1, newNode.board.(TicTacToe).board[0][0])
+	assert.Equal(t, 9, len(rootNode.unexpandedActions))
 	assert.Equal(t, rootNode.children[0], newNode)
 }
 
 func Test_newNodeHasWinner(t *testing.T) {
-	var board Board[Action] = TicTacToe{[3][3]int{}, 1}
+	var board State[Action] = TicTacToe{[3][3]int{}, 1}
 	board = board.PerformMove(TicTacToeAction{0, 0, 1})
 	board = board.PerformMove(TicTacToeAction{1, 0, 1})
-	rootNode := rootNode(board)
+	rootNode := createNode(board)
 	newNode := newNode(rootNode, TicTacToeAction{2, 0, 1})
 
 	assert.Equal(t, TicTacToeAction{2, 0, 1}, newNode.action)
 	assert.Equal(t, 1, newNode.winner)
-	assert.Equal(t, true, newNode.isTerminalState)
+	assert.Equal(t, true, newNode.isTerminal)
 }
 
-func Test_newNodeIsFullWithNoWinner(t *testing.T) {
-	var board [3][3]int
-    board[0][0] = 1
-    board[0][1] = 1
-    board[0][2] = -1
+func Test_selectLeafNode_selectFirstNode(t *testing.T) {
+	rootNode := createNode(TicTacToe{})
+	action1 := rootNode.unexpandedActions[0]
 
-    board[1][0] = -1
-    board[1][1] = -1
-    board[1][2] = 1
+	node := selectLeafNode(rootNode)
+	assert.Equal(t, node.action, action1)
+}
 
-    board[2][0] = 1
-    board[2][1] = -1
-    board[2][2] = 1
+func Test_selectLeafNode_expandChildIfNoUnexpandedActions(t *testing.T) {
+	rootNode := createNode(TicTacToe{player: 1})
+	rootNode.unexpandedActions = rootNode.unexpandedActions[:1]
 
-	rootNode := rootNode(TicTacToe{board, 1})
-	nodeA := newNode(rootNode, TicTacToeAction{0, 0, 1})
-	assert.Equal(t, 0, nodeA.winner)
-	assert.Equal(t, true, nodeA.isTerminalState)
+	childNode := selectLeafNode(rootNode)
+	grandChildNode := selectLeafNode(rootNode)
+
+	assert.NotEqual(t, childNode, grandChildNode)
+	assert.Equal(t, childNode.children[0], grandChildNode)
+	assert.Equal(t, 0, len(rootNode.unexpandedActions))
+	assert.Equal(t, 7, len(childNode.unexpandedActions))
+	assert.Equal(t, 7, len(grandChildNode.unexpandedActions))
+}
+
+func Test_selectLeafNode_doNotExpandTerminal(t *testing.T) {
+	rootNode := createNode(TicTacToe{player: 1})
+	rootNode.isTerminal = true
+
+	childNode := selectLeafNode(rootNode)
+
+	assert.Equal(t, childNode, rootNode)
 }
 
 func Test_findBestChild(t *testing.T) {
-	var board Board[Action] = TicTacToe{[3][3]int{}, 1}
-	rootNode := rootNode(board)
+	var board State[Action] = TicTacToe{[3][3]int{}, 1}
+	rootNode := createNode(board)
 	nodeA := newNode(rootNode, TicTacToeAction{1, 0, 1})
 	nodeB := newNode(rootNode, TicTacToeAction{2, 0, 1})
 
@@ -172,42 +88,10 @@ func Test_findBestChild(t *testing.T) {
 	nodeB.denom = 2.0
 
 	// B is better move and should be explored more
-	assert.Equal(t, nodeB, findBestChild(rootNode, float32(1.414)))
+	assert.Equal(t, nodeB, findBestChild(rootNode))
 
 	// B is better move still, but a should be explored more as b is overly explored
 	rootNode.denom = 5.0
 	nodeB.denom = 3.0
-	assert.Equal(t, nodeA, findBestChild(rootNode, float32(1.414)))
+	assert.Equal(t, nodeA, findBestChild(rootNode))
 }
-
-func Test_selectLeafNode_expandRootNode(t *testing.T) {
-	var board Board[Action] = TicTacToe{[3][3]int{}, 1}
-	rootNode := rootNode(board)
-	action1 := rootNode.unexpandedActions[0]
-
-	node := selectLeafNode(rootNode)
-	assert.Equal(t, node.action, action1)
-}
-
-//
-//func Test_selectLeafNode_expandChild(t *testing.T) {
-//	var board TicTacToe
-//	rootNode := rootNode(board)
-//	rootNode.unexpandedActions = []TicTacToeAction
-//	nodeA := newNode(rootNode, 1)
-//	action1 := nodeA.unexpandedActions[0]
-//
-//	node := selectLeafNode(rootNode)
-//	assert.Equal(t, node.action, action1)
-//}
-//
-//func Test_selectLeafNode_dontExpandTerminal(t *testing.T) {
-//	var board TicTacToe
-//	rootNode := rootNode(board)
-//	rootNode.unexpandedActions = []TicTacToeAction
-//	nodeA := newNode(rootNode, 1)
-//	nodeA.isTerminalState = true
-//
-//	node := selectLeafNode(rootNode)
-//	assert.Equal(t, node, nodeA)
-//}
