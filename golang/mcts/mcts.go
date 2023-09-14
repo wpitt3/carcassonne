@@ -1,10 +1,8 @@
-package main
+package mcts
 
 import (
-	"fmt"
 	"math"
 	"math/rand"
-	// 	"fmt"
 )
 
 type Action interface {
@@ -32,30 +30,35 @@ type node struct {
 }
 
 func rootNode(board Board[Action]) *node {
-	return &node{
-		board:             board.Copy(),
-		action:            nil,
-		unexpandedActions: shuffleActions(board.ValidActions()),
-	}
+	return createNode(board)
 }
 
 func newNode(parentNode *node, action Action) *node {
 	board := parentNode.board.PerformMove(action)
-	winner := board.Winner()
-	isTerminalState := winner != 0 || board.IsEndState()
-	newNode := &node{
-		board:             board,
-		action:            action,
-		parent:            parentNode,
-		winner:            winner,
-		isTerminalState:   isTerminalState,
-		unexpandedActions: shuffleActions(board.ValidActions()),
-	}
+	newNode := createNode(board)
+	newNode.parent = parentNode
+    newNode.action = action
 	parentNode.children = append(parentNode.children, newNode)
 	return newNode
 }
 
-func findBestMove(board Board[Action], turns int) Action {
+func createNode(board Board[Action]) *node {
+    winner := board.Winner()
+    isTerminalState := winner != 0 || board.IsEndState()
+    var actions []Action
+    if !isTerminalState {
+        actions = shuffleActions(board.ValidActions())
+    }
+    newNode := &node{
+        board:             board,
+        winner:            winner,
+        isTerminalState:   isTerminalState,
+        unexpandedActions: actions,
+    }
+    return newNode
+}
+
+func FindBestMove(board Board[Action], turns int) Action {
 	rootNode := rootNode(board)
 	for i := 0; i < turns; i++ {
 		leafNode := selectLeafNode(rootNode)
@@ -63,7 +66,7 @@ func findBestMove(board Board[Action], turns int) Action {
 		var score float32 = 0.0
 		if result == 0 {
 			score = 0.5
-		} else if result != board.CurrentPlayer() {
+		} else if result == board.CurrentPlayer() {
 			score = 1.0
 		}
 		currentNode := leafNode
@@ -77,20 +80,10 @@ func findBestMove(board Board[Action], turns int) Action {
 		currentNode.denom += 1
 	}
 
-	fmt.Println("")
-	//fmt.Println(rootNode.children[0].action)
-	//fmt.Println(rootNode.children[0].numer)
-	//fmt.Println(rootNode.children[0].denom)
-
 	bestMove := rootNode.children[0].action
 	bestScore := rootNode.children[0].numer / rootNode.children[0].denom
 	for i := 1; i < len(rootNode.children); i++ {
 		child := rootNode.children[i]
-		//fmt.Println("")
-		//fmt.Println(child.action)
-		//fmt.Println(child.numer)
-		//fmt.Println(child.denom)
-
 		if (child.numer / child.denom) > bestScore {
 			bestScore = (child.numer / child.denom)
 			bestMove = child.action
@@ -101,7 +94,7 @@ func findBestMove(board Board[Action], turns int) Action {
 
 func selectLeafNode(rootNode *node) *node {
 	currentNode := rootNode
-	c := float32(1.414)
+	c := float32(2.414)
 	for !currentNode.isTerminalState {
 
 		if len(currentNode.unexpandedActions) > 0 {
@@ -160,3 +153,26 @@ func rolloutGame(originalBoard Board[Action]) int {
 
 	return result
 }
+//
+// func printTree(aNode *node, depth int, maxDepth int, minSize int) {
+//     sortChildren(aNode.children)
+//     if depth < maxDepth {
+//         for i := 0; i < len(aNode.children); i++ {
+//             child := aNode.children[i]
+//             terminal := ""
+//             if child.isTerminalState {
+//                 terminal = " T"
+//             }
+//             fmt.Println(strings.Repeat("- ", depth) + fmt.Sprintf("%.3f",child.numer/child.denom) + " " + fmt.Sprint(child.action) + " " + fmt.Sprintf("%.0f", child.denom) + terminal)
+//             if child.denom > float32(minSize) {
+//                 printTree(child, depth+1, maxDepth, minSize)
+//             }
+//         }
+//     }
+// }
+//
+// func sortChildren(children []*node){
+//     sort.Slice(children, func(i, j int) bool {
+//         return children[i].action.(ConnectFourAction).index < children[j].action.(ConnectFourAction).index
+//     })
+// }

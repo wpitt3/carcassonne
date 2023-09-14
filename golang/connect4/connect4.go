@@ -1,4 +1,6 @@
-package main
+package connect4
+
+import . "will.com/mcts"
 
 type ConnectFour struct {
 	board  [7][6]int
@@ -8,6 +10,13 @@ type ConnectFour struct {
 type ConnectFourAction struct {
 	index  int
 	player int
+}
+
+func NewConnectFour(board  [7][6]int, player int) ConnectFour {
+    return ConnectFour{
+        board,
+        player,
+    }
 }
 
 func (board ConnectFour) Copy() Board[Action] {
@@ -52,7 +61,6 @@ func (board ConnectFour) PerformMove(action Action) Board[Action] {
 			return board
 		}
 	}
-	board.player = board.player * -1
 	return board
 }
 
