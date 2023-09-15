@@ -3,6 +3,7 @@ package mcts
 import (
 	"math"
 	"math/rand"
+	"time"
 )
 
 type RolloutEngine interface {
@@ -48,12 +49,25 @@ func NewSearchTree(rolloutEngine RolloutEngine, c float32, policyEngine PolicyEn
 	return SearchTree{rolloutEngine, c, policyEngine}
 }
 
-func (searchTree SearchTree) FindBestMove(board State[Action], turns int) Action {
+func (searchTree SearchTree) FindBestMoveByTurns(board State[Action], turns int) Action {
 	rootNode := createNode(board)
 	for i := 0; i < turns; i++ {
 		leafNode := searchTree.selectLeafNode(rootNode)
 		var score = searchTree.rolloutEngine.Rollout(leafNode.board, board.CurrentPlayer())
 		backpropagation(leafNode, rootNode, score)
+	}
+	return calculateBestAction(rootNode)
+}
+
+func (searchTree SearchTree) FindBestMoveByTime(board State[Action], milliSecs int64) Action {
+	rootNode := createNode(board)
+	startTime := time.Now()
+	timeTaken := int64(0)
+	for timeTaken < milliSecs {
+		leafNode := searchTree.selectLeafNode(rootNode)
+		var score = searchTree.rolloutEngine.Rollout(leafNode.board, board.CurrentPlayer())
+		backpropagation(leafNode, rootNode, score)
+		timeTaken = time.Now().Sub(startTime).Milliseconds()
 	}
 	return calculateBestAction(rootNode)
 }

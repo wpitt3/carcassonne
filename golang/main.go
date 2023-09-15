@@ -18,5 +18,9 @@ func main() {
 
 	var cBoard = connect4.NewConnectFour(board, 1)
 
-	fmt.Println(mcts.NewSearchTree(mcts.RandomRollout{}, float32(1.414), mcts.FlatPolicy{}).FindBestMove(cBoard, 1000))
+	var treeA = mcts.NewSearchTree(mcts.RandomRollout{}, float32(1.414), mcts.FlatPolicy{})
+	var treeB = mcts.NewSearchTree(mcts.RandomRollout{}, float32(1.414), mcts.FlatPolicy{})
+
+	fmt.Println(treeA.FindBestMoveByTime(cBoard, 1000))
+	fmt.Println(treeB.FindBestMoveByTime(cBoard, 1000))
 }
