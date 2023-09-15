@@ -1,10 +1,10 @@
 package main
 
 import (
-    "fmt"
-    "will.com/mcts"
-    "will.com/connect4"
-    )
+	"fmt"
+	"will.com/connect4"
+	"will.com/mcts"
+)
 
 func main() {
 	var board [7][6]int
@@ -18,5 +18,5 @@ func main() {
 
 	var cBoard = connect4.NewConnectFour(board, 1)
 
-	fmt.Println(mcts.FindBestMove(cBoard, 1000))
+	fmt.Println(mcts.NewSearchTree(mcts.RandomRollout{}, float32(1.414), mcts.FlatPolicy{}).FindBestMove(cBoard, 1000))
 }

@@ -5,7 +5,13 @@ import (
 	"math/rand"
 )
 
-const C = float32(1.414)
+type RolloutEngine interface {
+	Rollout(State[Action], int) float32
+}
+
+type PolicyEngine interface {
+	DefinePolicy(*Node) []float32
+}
 
 type Action interface {
 }
@@ -19,28 +25,52 @@ type State[A Action] interface {
 	CurrentPlayer() int
 }
 
-func FindBestMove(board State[Action], turns int) Action {
+type Node struct {
+	numer             float32
+	denom             float32
+	policyScore       float32
+	board             State[Action]
+	parent            *Node
+	children          []*Node
+	isTerminal        bool
+	action            Action
+	unexpandedActions []Action
+	winner            int
+}
+
+type SearchTree struct {
+	rolloutEngine RolloutEngine
+	c             float32
+	policyEngine  PolicyEngine
+}
+
+func NewSearchTree(rolloutEngine RolloutEngine, c float32, policyEngine PolicyEngine) SearchTree {
+	return SearchTree{rolloutEngine, c, policyEngine}
+}
+
+func (searchTree SearchTree) FindBestMove(board State[Action], turns int) Action {
 	rootNode := createNode(board)
 	for i := 0; i < turns; i++ {
-		leafNode := selectLeafNode(rootNode)
-		result := rolloutGame(leafNode.board)
-		var score float32 = 0.0
-		if result == 0 {
-			score = 0.5
-		} else if result == board.CurrentPlayer() {
-			score = 1.0
-		}
-		currentNode := leafNode
-		for currentNode != rootNode {
-			currentNode.numer += score
-			currentNode.denom += 1
-			score = 1.0 - score
-			currentNode = currentNode.parent
-		}
+		leafNode := searchTree.selectLeafNode(rootNode)
+		var score = searchTree.rolloutEngine.Rollout(leafNode.board, board.CurrentPlayer())
+		backpropagation(leafNode, rootNode, score)
+	}
+	return calculateBestAction(rootNode)
+}
+
+func backpropagation(leafNode *Node, rootNode *Node, score float32) {
+	currentNode := leafNode
+	for currentNode != rootNode {
 		currentNode.numer += score
 		currentNode.denom += 1
+		score = 1.0 - score
+		currentNode = currentNode.parent
 	}
+	currentNode.numer += score
+	currentNode.denom += 1
+}
 
+func calculateBestAction(rootNode *Node) Action {
 	bestMove := rootNode.children[0].action
 	bestScore := rootNode.children[0].numer / rootNode.children[0].denom
 	for i := 1; i < len(rootNode.children); i++ {
@@ -53,26 +83,14 @@ func FindBestMove(board State[Action], turns int) Action {
 	return bestMove
 }
 
-type node struct {
-	numer             float32
-	denom             float32
-	board             State[Action]
-	parent            *node
-	children          []*node
-	isTerminal        bool
-	action            Action
-	unexpandedActions []Action
-	winner            int
-}
-
-func createNode(board State[Action]) *node {
+func createNode(board State[Action]) *Node {
 	winner := board.Winner()
 	isTerminalState := winner != 0 || board.IsEndState()
 	var actions []Action
 	if !isTerminalState {
 		actions = shuffleActions(board.ValidActions())
 	}
-	newNode := &node{
+	newNode := &Node{
 		board:             board,
 		winner:            winner,
 		isTerminal:        isTerminalState,
@@ -81,7 +99,7 @@ func createNode(board State[Action]) *node {
 	return newNode
 }
 
-func newNode(parentNode *node, action Action) *node {
+func newNode(parentNode *Node, action Action) *Node {
 	board := parentNode.board.PerformMove(action)
 	newNode := createNode(board)
 	newNode.parent = parentNode
@@ -90,7 +108,7 @@ func newNode(parentNode *node, action Action) *node {
 	return newNode
 }
 
-func selectLeafNode(rootNode *node) *node {
+func (searchTree SearchTree) selectLeafNode(rootNode *Node) *Node {
 	currentNode := rootNode
 	for !currentNode.isTerminal {
 		if len(currentNode.unexpandedActions) > 0 {
@@ -98,19 +116,27 @@ func selectLeafNode(rootNode *node) *node {
 			currentNode.unexpandedActions = currentNode.unexpandedActions[1:]
 			return newNode
 		}
-		currentNode = findBestChild(currentNode)
+		if currentNode.children[0].policyScore == 0.0 {
+			policy := searchTree.policyEngine.DefinePolicy(currentNode)
+			if len(policy) != len(currentNode.children) {
+				panic("Policy does not match children")
+			}
+			for i := 0; i < len(currentNode.children); i++ {
+				currentNode.children[i].policyScore = policy[i]
+			}
+		}
+		currentNode = searchTree.findBestChild(currentNode)
 	}
-
 	return currentNode
 }
 
-func findBestChild(parent *node) *node {
+func (searchTree SearchTree) findBestChild(parent *Node) *Node {
 	logTotalParent := math.Log(float64(parent.denom))
 	var maxScore float32 = 0.0
 	var bestChild = parent.children[0]
 	for i := 0; i < len(parent.children); i++ {
 		child := parent.children[i]
-		score := exploreFunction(child.numer, child.denom, logTotalParent)
+		score := exploreFunction(child.numer, child.denom, logTotalParent, searchTree.c)
 		if score > maxScore {
 			maxScore = score
 			bestChild = child
@@ -119,8 +145,8 @@ func findBestChild(parent *node) *node {
 	return bestChild
 }
 
-func exploreFunction(wins float32, total float32, logTotalParent float64) float32 {
-	return wins/total + C*float32(math.Sqrt(logTotalParent/float64(total)))
+func exploreFunction(wins float32, total float32, logTotalParent float64, c float32) float32 {
+	return wins/total + c*float32(math.Sqrt(logTotalParent/float64(total)))
 }
 
 func shuffleActions(list []Action) []Action {
@@ -132,19 +158,4 @@ func shuffleActions(list []Action) []Action {
 		list[i-1] = temp
 	}
 	return list
-}
-
-func rolloutGame(originalBoard State[Action]) int {
-	rand := rand.New(rand.NewSource(1))
-	board := originalBoard.Copy()
-	result := board.Winner()
-	done := result != 0 || board.IsEndState()
-	for !done {
-		moves := board.ValidActions()
-		move := moves[rand.Intn(len(moves))]
-		board = board.PerformMove(move)
-		result = board.Winner()
-		done = result != 0 || board.IsEndState()
-	}
-	return result
 }

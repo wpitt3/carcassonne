@@ -5,6 +5,10 @@ import (
 	"testing"
 )
 
+func searchTree() SearchTree {
+	return NewSearchTree(RandomRollout{}, float32(1.414), FlatPolicy{})
+}
+
 func Test_rootnode(t *testing.T) {
 	var board State[Action] = TicTacToe{[3][3]int{}, 1}
 	rootNode := createNode(board)
@@ -47,7 +51,7 @@ func Test_selectLeafNode_selectFirstNode(t *testing.T) {
 	rootNode := createNode(TicTacToe{})
 	action1 := rootNode.unexpandedActions[0]
 
-	node := selectLeafNode(rootNode)
+	node := searchTree().selectLeafNode(rootNode)
 	assert.Equal(t, node.action, action1)
 }
 
@@ -55,8 +59,8 @@ func Test_selectLeafNode_expandChildIfNoUnexpandedActions(t *testing.T) {
 	rootNode := createNode(TicTacToe{player: 1})
 	rootNode.unexpandedActions = rootNode.unexpandedActions[:1]
 
-	childNode := selectLeafNode(rootNode)
-	grandChildNode := selectLeafNode(rootNode)
+	childNode := searchTree().selectLeafNode(rootNode)
+	grandChildNode := searchTree().selectLeafNode(rootNode)
 
 	assert.NotEqual(t, childNode, grandChildNode)
 	assert.Equal(t, childNode.children[0], grandChildNode)
@@ -69,7 +73,7 @@ func Test_selectLeafNode_doNotExpandTerminal(t *testing.T) {
 	rootNode := createNode(TicTacToe{player: 1})
 	rootNode.isTerminal = true
 
-	childNode := selectLeafNode(rootNode)
+	childNode := searchTree().selectLeafNode(rootNode)
 
 	assert.Equal(t, childNode, rootNode)
 }
@@ -88,10 +92,10 @@ func Test_findBestChild(t *testing.T) {
 	nodeB.denom = 2.0
 
 	// B is better move and should be explored more
-	assert.Equal(t, nodeB, findBestChild(rootNode))
+	assert.Equal(t, nodeB, searchTree().findBestChild(rootNode))
 
 	// B is better move still, but a should be explored more as b is overly explored
 	rootNode.denom = 5.0
 	nodeB.denom = 3.0
-	assert.Equal(t, nodeA, findBestChild(rootNode))
+	assert.Equal(t, nodeA, searchTree().findBestChild(rootNode))
 }
