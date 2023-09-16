@@ -75,13 +75,6 @@ func (board TicTacToe) Winner() int {
 	return 0
 }
 
-func abs(x int) int {
-	if x < 0 {
-		return -x
-	}
-	return x
-}
-
 func (board TicTacToe) CurrentPlayer() int {
 	return board.player
 }
@@ -91,4 +84,15 @@ func (board TicTacToe) PerformMove(action Action) State[Action] {
 	board.board[ticTacToeAction.x][ticTacToeAction.y] = ticTacToeAction.player
 	board.player = board.player * -1
 	return board
+}
+
+func (board TicTacToe) PrintState() {
+
+}
+
+func abs(x int) int {
+	if x < 0 {
+		return -x
+	}
+	return x
 }

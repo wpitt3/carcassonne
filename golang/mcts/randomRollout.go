@@ -5,7 +5,6 @@ import "math/rand"
 type RandomRollout struct{}
 
 func (_ RandomRollout) Rollout(originalBoard State[Action], currentPlayer int) float32 {
-	rand := rand.New(rand.NewSource(1))
 	board := originalBoard.Copy()
 	result := board.Winner()
 	done := result != 0 || board.IsEndState()

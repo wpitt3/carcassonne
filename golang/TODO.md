@@ -1,4 +1,10 @@
 
+flip state and action so they are always from one perspective
+more type safety
+use policy network correctly for branching
+
+
+record actions and states so that networks can be trained
 
 Test out different policy networks and define based on time
 

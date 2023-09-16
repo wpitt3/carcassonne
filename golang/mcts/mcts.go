@@ -11,7 +11,7 @@ type RolloutEngine interface {
 }
 
 type PolicyEngine interface {
-	DefinePolicy(*Node) []float32
+	DefinePolicy(State[Action], []Action) []float32
 }
 
 type Action interface {
@@ -24,15 +24,16 @@ type State[A Action] interface {
 	IsEndState() bool
 	Winner() int
 	CurrentPlayer() int
+	PrintState()
 }
 
-type Node struct {
+type node struct {
 	numer             float32
 	denom             float32
 	policyScore       float32
 	board             State[Action]
-	parent            *Node
-	children          []*Node
+	parent            *node
+	children          []*node
 	isTerminal        bool
 	action            Action
 	unexpandedActions []Action
@@ -72,7 +73,7 @@ func (searchTree SearchTree) FindBestMoveByTime(board State[Action], milliSecs i
 	return calculateBestAction(rootNode)
 }
 
-func backpropagation(leafNode *Node, rootNode *Node, score float32) {
+func backpropagation(leafNode *node, rootNode *node, score float32) {
 	currentNode := leafNode
 	for currentNode != rootNode {
 		currentNode.numer += score
@@ -84,7 +85,7 @@ func backpropagation(leafNode *Node, rootNode *Node, score float32) {
 	currentNode.denom += 1
 }
 
-func calculateBestAction(rootNode *Node) Action {
+func calculateBestAction(rootNode *node) Action {
 	bestMove := rootNode.children[0].action
 	bestScore := rootNode.children[0].numer / rootNode.children[0].denom
 	for i := 1; i < len(rootNode.children); i++ {
@@ -97,14 +98,14 @@ func calculateBestAction(rootNode *Node) Action {
 	return bestMove
 }
 
-func createNode(board State[Action]) *Node {
+func createNode(board State[Action]) *node {
 	winner := board.Winner()
 	isTerminalState := winner != 0 || board.IsEndState()
 	var actions []Action
 	if !isTerminalState {
 		actions = shuffleActions(board.ValidActions())
 	}
-	newNode := &Node{
+	newNode := &node{
 		board:             board,
 		winner:            winner,
 		isTerminal:        isTerminalState,
@@ -113,7 +114,7 @@ func createNode(board State[Action]) *Node {
 	return newNode
 }
 
-func newNode(parentNode *Node, action Action) *Node {
+func newNode(parentNode *node, action Action) *node {
 	board := parentNode.board.PerformMove(action)
 	newNode := createNode(board)
 	newNode.parent = parentNode
@@ -122,7 +123,7 @@ func newNode(parentNode *Node, action Action) *Node {
 	return newNode
 }
 
-func (searchTree SearchTree) selectLeafNode(rootNode *Node) *Node {
+func (searchTree SearchTree) selectLeafNode(rootNode *node) *node {
 	currentNode := rootNode
 	for !currentNode.isTerminal {
 		if len(currentNode.unexpandedActions) > 0 {
@@ -131,9 +132,14 @@ func (searchTree SearchTree) selectLeafNode(rootNode *Node) *Node {
 			return newNode
 		}
 		if currentNode.children[0].policyScore == 0.0 {
-			policy := searchTree.policyEngine.DefinePolicy(currentNode)
+			var actions []Action
+			for i := 0; i < len(currentNode.children); i++ {
+				actions = append(actions, currentNode.children[i].action)
+			}
+
+			policy := searchTree.policyEngine.DefinePolicy(currentNode.board, actions)
 			if len(policy) != len(currentNode.children) {
-				panic("Policy does not match children")
+				panic("Policy length does not match children")
 			}
 			for i := 0; i < len(currentNode.children); i++ {
 				currentNode.children[i].policyScore = policy[i]
@@ -144,7 +150,7 @@ func (searchTree SearchTree) selectLeafNode(rootNode *Node) *Node {
 	return currentNode
 }
 
-func (searchTree SearchTree) findBestChild(parent *Node) *Node {
+func (searchTree SearchTree) findBestChild(parent *node) *node {
 	logTotalParent := math.Log(float64(parent.denom))
 	var maxScore float32 = 0.0
 	var bestChild = parent.children[0]
@@ -164,7 +170,6 @@ func exploreFunction(wins float32, total float32, logTotalParent float64, c floa
 }
 
 func shuffleActions(list []Action) []Action {
-	rand := rand.New(rand.NewSource(1))
 	for i := len(list); i > 0; i-- {
 		ri := rand.Intn(i)
 		temp := list[ri]

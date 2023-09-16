@@ -1,6 +1,9 @@
 package connect4
 
-import . "will.com/mcts"
+import (
+	"fmt"
+	. "will.com/mcts"
+)
 
 type ConnectFour struct {
 	board  [7][6]int
@@ -62,6 +65,18 @@ func (board ConnectFour) PerformMove(action Action) State[Action] {
 		}
 	}
 	return board
+}
+
+func (board ConnectFour) PrintState() {
+	valueToPrint := map[int]string{0: " ", 1: "#", -1: "O"}
+	var toPrint = ""
+	for i := 5; i >= 0; i-- {
+		for j := 0; j < 7; j++ {
+			toPrint += valueToPrint[board.board[j][i]]
+		}
+		toPrint += "\n"
+	}
+	fmt.Println(toPrint)
 }
 
 func boardIsFull(board [7][6]int) bool {
