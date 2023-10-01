@@ -13,18 +13,21 @@ func main() {
 	games := 100
 	startPlayer := 1
 	for i := 0; i < games; i++ {
-		var cBoard = connect4.NewConnectFour([7][6]int{}, startPlayer)
+		currentPlayer := startPlayer
+		var cBoard = connect4.NewConnectFour([7][6]int{})
 		for !cBoard.IsEndState() && cBoard.Winner() == 0 {
 			var move mcts.Action
-			if cBoard.CurrentPlayer() == 1 {
+			if currentPlayer == 1 {
 				move = treeA.FindBestMoveByTime(cBoard, 300)
 			} else {
 				move = treeB.FindBestMoveByTime(cBoard, 300)
 			}
 			cBoard = cBoard.PerformMove(move).(connect4.ConnectFour)
+			cBoard.PrintState()
+			currentPlayer *= -1
 		}
 		startPlayer *= -1
-		fmt.Println(cBoard.Winner())
+		fmt.Println(startPlayer)
 		cBoard.PrintState()
 	}
 }

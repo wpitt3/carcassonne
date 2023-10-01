@@ -72,10 +72,11 @@ func Test_fullState(t *testing.T) {
 
 func Test_performMove(t *testing.T) {
 	var board State[Action] = ConnectFour{}
-	board = board.PerformMove(ConnectFourAction{0, 1})
-	board = board.PerformMove(ConnectFourAction{0, 1})
+	board = board.PerformMove(ConnectFourAction{0})
+	assert.Equal(t, -1, board.(ConnectFour).board[0][0])
+	board = board.PerformMove(ConnectFourAction{0})
 	assert.Equal(t, 1, board.(ConnectFour).board[0][0])
-	assert.Equal(t, 1, board.(ConnectFour).board[0][1])
+	assert.Equal(t, -1, board.(ConnectFour).board[0][1])
 }
 
 func Test_ValidActions(t *testing.T) {

@@ -4,7 +4,7 @@ import "math/rand"
 
 type RandomRollout struct{}
 
-func (_ RandomRollout) Rollout(originalBoard State[Action], currentPlayer int) float32 {
+func (_ RandomRollout) Rollout(originalBoard State[Action]) float32 {
 	board := originalBoard.Copy()
 	result := board.Winner()
 	done := result != 0 || board.IsEndState()
@@ -17,7 +17,7 @@ func (_ RandomRollout) Rollout(originalBoard State[Action], currentPlayer int) f
 	}
 	if result == 0 {
 		return 0.5
-	} else if result == currentPlayer {
+	} else if result == -1 {
 		return 1.0
 	}
 

@@ -6,19 +6,16 @@ import (
 )
 
 type ConnectFour struct {
-	board  [7][6]int
-	player int
+	board [7][6]int
 }
 
 type ConnectFourAction struct {
-	index  int
-	player int
+	index int
 }
 
-func NewConnectFour(board [7][6]int, player int) ConnectFour {
+func NewConnectFour(board [7][6]int) ConnectFour {
 	return ConnectFour{
 		board,
-		player,
 	}
 }
 
@@ -29,7 +26,6 @@ func (board ConnectFour) Copy() State[Action] {
 			newBoard.board[i][j] = board.board[i][j]
 		}
 	}
-	newBoard.player = board.player
 	return newBoard
 }
 
@@ -37,7 +33,7 @@ func (board ConnectFour) ValidActions() []Action {
 	validMoves := make([]Action, 0)
 	for i := 0; i < 7; i++ {
 		if board.board[i][5] == 0 {
-			validMoves = append(validMoves, ConnectFourAction{i, board.player})
+			validMoves = append(validMoves, ConnectFourAction{i})
 		}
 	}
 	return validMoves
@@ -51,20 +47,21 @@ func (board ConnectFour) Winner() int {
 	return find4InBoard(board.board)
 }
 
-func (board ConnectFour) CurrentPlayer() int {
-	return board.player
-}
-
 func (board ConnectFour) PerformMove(action Action) State[Action] {
 	connectFourAction := action.(ConnectFourAction)
+	for i := 0; i < 5; i++ {
+		for j := 0; j < 7; j++ {
+			board.board[j][i] = -1 * board.board[j][i]
+		}
+	}
 	for i := 0; i < 6; i++ {
 		if board.board[connectFourAction.index][i] == 0 {
-			board.board[connectFourAction.index][i] = connectFourAction.player
-			board.player = board.player * -1
+			board.board[connectFourAction.index][i] = -1
 			return board
 		}
 	}
-	return board
+	panic("SHITE")
+
 }
 
 func (board ConnectFour) PrintState() {
@@ -127,7 +124,6 @@ func find4InBoard(board [7][6]int) int {
 			}
 		}
 	}
-
 	return 0
 }
 

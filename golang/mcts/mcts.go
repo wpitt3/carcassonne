@@ -6,27 +6,6 @@ import (
 	"time"
 )
 
-type RolloutEngine interface {
-	Rollout(State[Action], int) float32
-}
-
-type PolicyEngine interface {
-	DefinePolicy(State[Action], []Action) []float32
-}
-
-type Action interface {
-}
-
-type State[A Action] interface {
-	Copy() State[A]
-	ValidActions() []A
-	PerformMove(A) State[A]
-	IsEndState() bool
-	Winner() int
-	CurrentPlayer() int
-	PrintState()
-}
-
 type node struct {
 	numer             float32
 	denom             float32
@@ -54,7 +33,7 @@ func (searchTree SearchTree) FindBestMoveByTurns(board State[Action], turns int)
 	rootNode := createNode(board)
 	for i := 0; i < turns; i++ {
 		leafNode := searchTree.selectLeafNode(rootNode)
-		var score = searchTree.rolloutEngine.Rollout(leafNode.board, board.CurrentPlayer())
+		var score = searchTree.rolloutEngine.Rollout(leafNode.board)
 		backpropagation(leafNode, rootNode, score)
 	}
 	return calculateBestAction(rootNode)
@@ -66,7 +45,7 @@ func (searchTree SearchTree) FindBestMoveByTime(board State[Action], milliSecs i
 	timeTaken := int64(0)
 	for timeTaken < milliSecs {
 		leafNode := searchTree.selectLeafNode(rootNode)
-		var score = searchTree.rolloutEngine.Rollout(leafNode.board, board.CurrentPlayer())
+		var score = searchTree.rolloutEngine.Rollout(leafNode.board)
 		backpropagation(leafNode, rootNode, score)
 		timeTaken = time.Now().Sub(startTime).Milliseconds()
 	}

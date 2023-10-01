@@ -17,7 +17,7 @@ func Test_findBestMove_win(t *testing.T) {
 	board[3][1] = 1
 	board[3][2] = 1
 
-	assert.Equal(t, ConnectFourAction{3, 1}, searchTree().FindBestMoveByTurns(ConnectFour{board, 1}, 1000))
+	assert.Equal(t, ConnectFourAction{3}, searchTree().FindBestMoveByTurns(ConnectFour{board}, 1000))
 }
 
 func Test_findBestMove_nearlyLose(t *testing.T) {
@@ -26,7 +26,7 @@ func Test_findBestMove_nearlyLose(t *testing.T) {
 	board[3][1] = -1
 	board[3][2] = -1
 
-	assert.Equal(t, ConnectFourAction{3, 1}, searchTree().FindBestMoveByTurns(ConnectFour{board, 1}, 1000))
+	assert.Equal(t, ConnectFourAction{3}, searchTree().FindBestMoveByTurns(ConnectFour{board}, 1000))
 }
 
 func Test_findBestMove_createFork(t *testing.T) {
@@ -53,5 +53,5 @@ func Test_findBestMove_createFork(t *testing.T) {
 	board[0][0] = -1
 	board[0][1] = -1
 
-	assert.Equal(t, ConnectFourAction{4, 1}, searchTree().FindBestMoveByTurns(ConnectFour{board, 1}, 100000))
+	assert.Equal(t, ConnectFourAction{4}, searchTree().FindBestMoveByTurns(ConnectFour{board}, 100000))
 }

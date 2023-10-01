@@ -1,5 +1,4 @@
 
-flip state and action so they are always from one perspective
 more type safety
 use policy network correctly for branching
 
